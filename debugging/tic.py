@@ -4,15 +4,18 @@ def print_board(board):
         print("-" * 5)
 
 def check_winner(board):
-    # Check rows and columns
-    for i in range(3):
-        if board[i][0] == board[i][1] == board[i][2] != " " or \
-           board[0][i] == board[1][i] == board[2][i] != " ":
+    for row in board:
+        if row[0] != " " and row[0] == row[1] == row[2]:
             return True
 
-    # Check diagonals
-    if board[0][0] == board[1][1] == board[2][2] != " " or \
-       board[0][2] == board[1][1] == board[2][0] != " ":
+    for col in range(len(board[0])):
+        if board[0][col] != " " and board[0][col] == board[1][col] == board[2][col]:
+            return True
+
+    if board[0][0] != " " and board[0][0] == board[1][1] == board[2][2]:
+        return True
+
+    if board[0][2] != " " and board[0][2] == board[1][1] == board[2][0]:
         return True
 
     return False
@@ -22,18 +25,28 @@ def tic_tac_toe():
     player = "X"
     while not check_winner(board):
         print_board(board)
-        try:
-            row = int(input("Enter row (0, 1, or 2) for player " + player + ": "))
-            col = int(input("Enter column (0, 1, or 2) for player " + player + ": "))
-            if board[row][col] == " ":
-                board[row][col] = player
-                player = "O" if player == "X" else "X"
-            else:
-                print("That spot is already taken! Try again.")
-        except (ValueError, IndexError):
-            print("Invalid input! Please enter a number between 0 and 2.")
+        while True:
+            try:
+                row = int(input("Enter row (0, 1, or 2) for player " + player + ": "))
+                col = int(input("Enter column (0, 1, or 2) for player " + player + ": "))
+                if 0 <= row <= 2 and 0 <= col <= 2:
+                    if board[row][col] == " ":
+                        board[row][col] = player
+                        break
+                    else:
+                        print("That spot is already taken! Try again.")
+                else:
+                    print("Invalid input! Please enter a number between 0 and 2.")
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+        player = "O" if player == "X" else "X"
 
     print_board(board)
-    print("Player " + ("O" if player == "X" else "X") + " wins!")
+    if player == "X":
+        winner = "O"
+    else:
+        winner = "X"
+    print("Player " + winner + " wins!")
 
 tic_tac_toe()
